@@ -1,0 +1,16 @@
+{
+  "name": "weibo-pm",
+  "version": "0.1.0",
+  "description": "SDK for Weibo Private Message Open API ，Only Authenticated User （V）.",
+  "main": "core.js",
+  "repository": {
+    "type": "git",
+    "url": "git@gitcafe.com:EdwonLim/Weibo-PM.git"
+  },
+  "keywords": [
+    "weibo",
+    "pm",
+    "message"
+  ],
+  "author": "Edwon Lim"
+}
