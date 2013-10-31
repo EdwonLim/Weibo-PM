@@ -12,7 +12,7 @@ SDK for Weibo Private Message Open API ，Only Authenticated User （V）.
 
 ### Include :
 	
-	var pm = require('weibo-pm');
+	var pm = require("weibo-pm");
 
 ### Initialize :
 
