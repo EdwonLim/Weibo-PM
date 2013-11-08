@@ -1,6 +1,6 @@
 {
   "name": "weibo-pm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SDK for Weibo Private Message Open API ，Only Authenticated User （V）.",
   "main": "core.js",
   "repository": {
