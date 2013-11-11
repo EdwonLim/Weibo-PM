@@ -175,7 +175,7 @@
 
 下面已经有两个完成的`Process`，之后会逐渐增加。
 
-### 1.ReplyForEvent 事件自动回复:
+### 1. ReplyForEvent 事件自动回复:
 
 示例如下:
 
@@ -188,7 +188,7 @@
 
 	pm.ReplyManager.addProcess(rfe);
 	
-### 2.文本消息自动回复:
+### 2. ReplyForText 文本消息自动回复:
 
 示例如下:
 
