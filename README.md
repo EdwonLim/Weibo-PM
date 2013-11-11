@@ -2,7 +2,8 @@
 
 ## Introduction 介绍 :
 
-新浪微博粉丝服务私信管理工具，用于认证用户（蓝V，橙V）的自主服务，详见 [http://open.weibo.com/wiki/粉丝服务开发模式指南](http://open.weibo.com/wiki/粉丝服务开发模式指南)
+新浪微博粉丝服务私信管理工具，用于认证用户（蓝V，橙V）的自主服务，
+详见 [http://open.weibo.com/wiki/粉丝服务开发模式指南](http://open.weibo.com/wiki/粉丝服务开发模式指南)
 
 ## Install 安装:
 
@@ -14,13 +15,13 @@
 
 ## Base API 基本接口:
 
-### Initialize 初始化:
+### 1.Initialize 初始化:
 
 用户名，用户id，用户密码，用户绑定的appkey
  
 	pm.init(username, uid, password, appkey);
 	
-### Receive Message 接收消息:
+### 2.Receive Message 接收消息:
 
 监听所有消息
  
@@ -46,13 +47,13 @@
         //TODO Execute Mention Message
     });
 
-### Start Listener 启动监听:
+### 3.Start Listener 启动监听:
 
 启动监听（每3分钟会重新建立HTTP连接）
 
     pm.listener.start();
 
-### Rely Message 回复消息:
+### 4.Rely Message 回复消息:
 
 需要回复的消息的id，类型和数据，详细参看文档
  
@@ -62,7 +63,7 @@
 	
 文档：[http://open.weibo.com/wiki/2/messages/reply](http://open.weibo.com/wiki/2/messages/reply)
 
-### Send Message 发送消息:
+### 5.Send Message 发送消息:
 
 用户id，类型和数据，详细参看文档 之可给粉丝发送私信
  
@@ -74,7 +75,7 @@
 
 ## Advanced API 高级接口:
 
-### Message Model 消息类：
+### 1. Message Model 消息类：
 
 在每次回复和发送私信的过程中，都可以新建一个消息实体
 
@@ -126,4 +127,96 @@
         .error(function(rs){alert("error")})
         .send();
     
-### Reply Manager 回复管理器:
+### 2.Reply Manager 回复管理器:
+
+### 启动:
+
+	pm.ReplyManager.start()
+	
+启动后，基本API Listener会失效。
+
+### 开启分级目录功能:
+
+	pm.ReplyManager.openFloor({
+    	items : {  // 目录和进入目录显示的消息
+        	'js' : '欢迎来到js脚本目录！输入 1 、 2 查看相应内容。', 
+        	'css' : '欢迎来到css样式目录！输入 1 、 2 查看相应内容。',
+        	'html' : '欢迎来到html页面目录！输入 1 、 2 查看相应内容。'
+    	},
+    	hotKey : ['menu', '菜单'], // 显示菜单帮助的命令
+    	helpText : '欢迎来到此地，请输入"js","css","html"进入相应目录，输入"0"退出相应目录。', // 菜单帮助消息
+    	backText : '已退出目录"FLOOR"。', // 退出目录显示的消息
+    	backKey : ['0'], // 退出目录的命令
+    	timeout : 300 // 自动退出目录的时间，单位s，300表示5分钟自动退出到根目录
+	});
+	
+### 增加处理过程:
+
+	pm.ReplyManager.addProcess({
+		onMessage : function(msg, reply, floor) {},
+		onEvent : function(msg, reply) {},
+		onMetion : function(msg, reply) {},
+		onQuitFloor : function(msg, reply) {},
+		onEnterFloor : function(msg, reply) {}
+	});
+	
+处理过程为一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor`中的一个或几个方法，当有相应消息时，会调用此方法。
+
+参数中`msg`是消息，`reply`是`pm.Message`实体，已经设置好`id`，设置回复内容后，可直接发送
+
+### 删除处理过程:
+	
+	pm.ReplyManager.removeProcess(process);
+
+
+## Process 处理过程:
+
+可以自定义处理过程来进行消息的自动处理和回复。
+
+下面已经有两个完成的`Process`，之后会逐渐增加。
+
+### 1.ReplyForEvent 事件自动回复:
+
+示例如下:
+
+	var rfe = pm.ReplyProcess.replyForEvent;
+
+	rfe.init({
+    	'follow' : '亲！欢迎关注本账号！输入 menu 或 菜单 查看相应内容。',
+    	'unfollow' : '不要离开我，行不行吗？呜呜！'
+	});
+
+	pm.ReplyManager.addProcess(rfe);
+	
+### 2.文本消息自动回复:
+
+示例如下:
+
+	var rft = pm.ReplyProcess.replyForText;
+
+	rft.init({
+    	'js' : {
+        	'1' : ['text', 'js是很神奇的东西'],
+     		'2' : ['articles', [
+                	['js很牛', 'js太牛了', 'http://tp2.sinaimg.cn/1908736117/180/5678518790/1', 'http://weibo.com'],
+                	['js很牛逼', 'js太牛逼了', 'http://tp2.sinaimg.cn/1908736117/180/5678518790/1', 'http://weibo.com']
+              	]]
+    	},
+    	'css' : {
+        	'1' : ['text', 'css是很神奇的东西'],
+        	'2' : ['image', 1055597360, 1055597367]
+    	},
+    	'html' : {
+        	'1' : ['text', 'html是很神奇的东西'],
+        	'2' : ['position', '116.309868', '39.984371']
+    	}
+	});
+
+	pm.ReplyManager.addProcess(rft);
+
+
+## Debug 调试信息:
+
+开启调试信息输出:
+	
+	pm.Debug.open();
