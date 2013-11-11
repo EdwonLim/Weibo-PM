@@ -1,7 +1,7 @@
 {
   "name": "weibo-pm",
-  "version": "0.2.0",
-  "description": "SDK for Weibo Private Message Open API ，Only Authenticated User （V）.",
+  "version": "0.3.0",
+  "description": "Private message manager tool of Sina Weibo fan service.",
   "main": "core.js",
   "repository": {
     "type": "git",
