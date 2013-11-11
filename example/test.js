@@ -7,7 +7,7 @@ pm.Debug.open();
 
 // 初始化用户
 
-pm.init('yinxl_002@163.com', '2818428057', '123456xmu', '2447957237');
+pm.init('username', 'uid', 'password', 'appkey');
 
 // 打开分级目录功能
 
