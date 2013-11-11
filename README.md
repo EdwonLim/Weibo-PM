@@ -82,20 +82,20 @@
 
 设置需要回复的消息的id或者用户的id
  
-    message.setId('msg id');
-    message.setUid('user id');
+    message.setId("msg id");
+    message.setUid("user id");
 
 设置文本，将发出文本消息
  
-    message.setText('message text');
+    message.setText("message text");
 
 添加图文信息，将发出图文消息，展示为Card
  
-    message.addArticle('title', 'summary', 'image', 'url');
+    message.addArticle("title", "summary", "image", "url");
 
 设置地理位置，将发出地理位置的消息
  
-	message.setPosition('longitude', 'latitude');
+	message.setPosition("longitude", "latitude");
     
 设置图片（上传所得的id），将发出带有图片的消息
  
@@ -120,10 +120,10 @@
 简单示例
  
     new Message()
-        .setUid('1908736117')
-        .setText('Hello World!')
-        .success(function(rs){alert('success')})
-        .error(function(rs){alert('error')})
+        .setUid("1908736117")
+        .setText("Hello World!")
+        .success(function(rs){alert("success")})
+        .error(function(rs){alert("error")})
         .send();
     
 ### Reply Manager 回复管理器:
