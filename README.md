@@ -139,14 +139,14 @@
 
 	pm.ReplyManager.openFloor({
     	items : {  // 目录和进入目录显示的消息
-        	'js' : '欢迎来到js脚本目录！输入 1 、 2 查看相应内容。', 
-        	'css' : '欢迎来到css样式目录！输入 1 、 2 查看相应内容。',
-        	'html' : '欢迎来到html页面目录！输入 1 、 2 查看相应内容。'
+        	"js" : "欢迎来到js脚本目录！输入 1 、 2 查看相应内容。", 
+        	"css" : "欢迎来到css样式目录！输入 1 、 2 查看相应内容。",
+        	"html" : "欢迎来到html页面目录！输入 1 、 2 查看相应内容。"
     	},
-    	hotKey : ['menu', '菜单'], // 显示菜单帮助的命令
-    	helpText : '欢迎来到此地，请输入"js","css","html"进入相应目录，输入"0"退出相应目录。', // 菜单帮助消息
-    	backText : '已退出目录"FLOOR"。', // 退出目录显示的消息
-    	backKey : ['0'], // 退出目录的命令
+    	hotKey : ["menu", "菜单"], // 显示菜单帮助的命令
+    	helpText : "欢迎来到此地，请输入"js","css","html"进入相应目录，输入"0"退出相应目录。", // 菜单帮助消息
+    	backText : "已退出目录"FLOOR"。", // 退出目录显示的消息
+    	backKey : ["0"], // 退出目录的命令
     	timeout : 300 // 自动退出目录的时间，单位s，300表示5分钟自动退出到根目录
 	});
 	
@@ -182,8 +182,8 @@
 	var rfe = pm.ReplyProcess.replyForEvent;
 
 	rfe.init({
-    	'follow' : '亲！欢迎关注本账号！输入 menu 或 菜单 查看相应内容。',
-    	'unfollow' : '不要离开我，行不行吗？呜呜！'
+    	"follow" : "亲！欢迎关注本账号！输入 menu 或 菜单 查看相应内容。",
+    	"unfollow" : "不要离开我，行不行吗？呜呜！"
 	});
 
 	pm.ReplyManager.addProcess(rfe);
@@ -195,20 +195,20 @@
 	var rft = pm.ReplyProcess.replyForText;
 
 	rft.init({
-    	'js' : {
-        	'1' : ['text', 'js是很神奇的东西'],
-     		'2' : ['articles', [
-                	['js很牛', 'js太牛了', 'http://tp2.sinaimg.cn/1908736117/180/5678518790/1', 'http://weibo.com'],
-                	['js很牛逼', 'js太牛逼了', 'http://tp2.sinaimg.cn/1908736117/180/5678518790/1', 'http://weibo.com']
+    	"js" : {
+        	"1" : ["text", "js是很神奇的东西"],
+     		"2" : ["articles", [
+                	["js很牛", "js太牛了", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1", "http://weibo.com"],
+                	["js很牛逼", "js太牛逼了", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1", "http://weibo.com"]
               	]]
     	},
-    	'css' : {
-        	'1' : ['text', 'css是很神奇的东西'],
-        	'2' : ['image', 1055597360, 1055597367]
+    	"css" : {
+        	"1" : ["text", "css是很神奇的东西"],
+        	"2" : ["image", 1055597360, 1055597367]
     	},
-    	'html' : {
-        	'1' : ['text', 'html是很神奇的东西'],
-        	'2' : ['position', '116.309868', '39.984371']
+    	"html" : {
+        	"1" : ["text", "html是很神奇的东西"],
+        	"2" : ["position", "116.309868", "39.984371"]
     	}
 	});
 
