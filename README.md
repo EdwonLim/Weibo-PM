@@ -93,11 +93,11 @@
  
     message.addArticle('title', 'summary', 'image', 'url');
 
- * 设置地理位置，将发出地理位置的消息
+设置地理位置，将发出地理位置的消息
  
 	message.setPosition('longitude', 'latitude');
     
- * 设置图片（上传所得的id），将发出带有图片的消息
+设置图片（上传所得的id），将发出带有图片的消息
  
     message.setImage(vfid, tovfid);
     
