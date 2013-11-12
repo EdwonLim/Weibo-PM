@@ -153,6 +153,10 @@
 ### 增加处理过程:
 
 	pm.ReplyManager.addProcess({
+	    startTime : 'yyyy/MM/dd hh:mm:ss',
+	    endTime : 'yyyy/MM/dd hh:mm:ss',
+	    onStart : function() {},
+	    onEnd : function() {},
 		onMessage : function(msg, reply, floor) {},
 		onEvent : function(msg, reply) {},
 		onMetion : function(msg, reply) {},
@@ -160,9 +164,11 @@
 		onEnterFloor : function(msg, reply) {}
 	});
 	
-处理过程为一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor`中的一个或几个方法，当有相应消息时，会调用此方法。
+处理过程为一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor`, `onStart`, `onEnd` 中的一个或几个方法，当有相应事件时，会调用此方法。
 
-参数中`msg`是消息，`reply`是`pm.Message`实体，已经设置好`id`，设置回复内容后，可直接发送
+`startTime`和`endTime`为过程开始和结束时间。
+
+参数中`msg`是消息，`reply`是`pm.Message`实体，已经设置好`id`，设置回复内容后，可直接发送，`floor`为目录，开启目录功能后，会有此参数
 
 ### 删除处理过程:
 	
