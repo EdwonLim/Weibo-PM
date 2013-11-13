@@ -1,6 +1,5 @@
 var pm = require("./../core");
 
-
 // 打开Debug
 
 pm.Debug.open();
@@ -58,6 +57,53 @@ rfe.init({
 });
 
 pm.ReplyManager.addProcess(rfe);
+
+// 抽奖功能
+
+var lot = new pm.ReplyProcess.Lottery();
+
+lot.setTime('2013/11/13 23:20:00', '2013/11/13 23:21:00');
+
+lot.setKey(['抽奖', 'cj']);
+
+lot.setContent({
+    beforeEvent : '抽奖还未开始！',
+    onEvent : '成功参与抽奖，请耐心等待结果！',
+    repeat : '您已成功参与抽奖！每人只可参与一次！',
+    afterEvent : '抽奖已经结束！',
+    prize : '恭喜您获得【NAME】- TEXT ，稍后我们将私信联系您。',
+    none : '很遗憾，您没有抽中任何奖项，谢谢您的参与！'
+});
+
+lot.addPrize('特等奖', '宝马一辆', 1);
+lot.addPrize('一等奖', 'Mac Pro一台', 1);
+lot.addPrize('二等奖', 'MacBook Pro一台', 1);
+
+lot.setLogFile('/Users/Apple/Downloads/lot.xlsx');
+
+pm.ReplyManager.addProcess(lot);
+
+// 秒杀功能
+
+var sk = new pm.ReplyProcess.SecKill();
+
+sk.setTime('2013/11/13 23:52:00', '2013/11/13 23:53:00');
+
+sk.setKey(['秒杀', 'ms']);
+
+sk.setContent({
+    beforeEvent : '秒杀还未开始！',
+    repeat : '您已成功秒杀！每人只可秒杀一次！',
+    afterEvent : '秒杀已经结束！',
+    success : '恭喜您获得 - NAME ，稍后我们将私信联系您。',
+    none : '商品已经全部被秒杀！'
+});
+
+sk.setPrize('宝马一辆', 1);
+
+sk.setLogFile('/Users/Apple/Downloads/sk.xlsx');
+
+pm.ReplyManager.addProcess(sk);
 
 // 开始进程
 

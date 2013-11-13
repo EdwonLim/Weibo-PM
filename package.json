@@ -1,6 +1,6 @@
 {
   "name": "weibo-pm",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Private message manager tool of Sina Weibo fan service.",
   "main": "core.js",
   "repository": {
@@ -12,5 +12,8 @@
     "pm",
     "message"
   ],
+  "dependencies": {
+    "node-xlsx": ">= 0.2.2"
+  },
   "author": "Edwon Lim"
 }

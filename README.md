@@ -153,10 +153,6 @@
 ### 增加处理过程:
 
 	pm.ReplyManager.addProcess({
-	    startTime : 'yyyy/MM/dd hh:mm:ss',
-	    endTime : 'yyyy/MM/dd hh:mm:ss',
-	    onStart : function() {},
-	    onEnd : function() {},
 		onMessage : function(msg, reply, floor) {},
 		onEvent : function(msg, reply) {},
 		onMetion : function(msg, reply) {},
@@ -164,9 +160,7 @@
 		onEnterFloor : function(msg, reply) {}
 	});
 	
-处理过程为一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor`, `onStart`, `onEnd` 中的一个或几个方法，当有相应事件时，会调用此方法。
-
-`startTime`和`endTime`为过程开始和结束时间。
+处理过程为一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor` 中的一个或几个方法，当有相应事件时，会调用此方法。
 
 参数中`msg`是消息，`reply`是`pm.Message`实体，已经设置好`id`，设置回复内容后，可直接发送，`floor`为目录，开启目录功能后，会有此参数
 
@@ -179,7 +173,7 @@
 
 可以自定义处理过程来进行消息的自动处理和回复。
 
-下面已经有两个完成的`Process`，之后会逐渐增加。
+下面已经完成的`4`个`Process`，之后会逐渐增加。
 
 ### 1. ReplyForEvent 事件自动回复:
 
@@ -219,6 +213,57 @@
 	});
 
 	pm.ReplyManager.addProcess(rft);
+
+### 3. Lottery 抽奖:
+
+示例如下:
+
+	var lot = new pm.ReplyProcess.Lottery();
+
+	lot.setTime('2013/11/13 12:00:00', '2013/11/13 13:00:00');
+
+	lot.setKey(['抽奖', 'cj']);
+
+	lot.setContent({
+    	beforeEvent : '抽奖还未开始！',
+    	onEvent : '成功参与抽奖，请耐心等待结果！',
+    	repeat : '您已成功参与抽奖！每人只可参与一次！',
+    	afterEvent : '抽奖已经结束！',
+    	prize : '恭喜您获得【NAME】- TEXT ，稍后我们将私信联系您。',
+    	none : '很遗憾，您没有抽中任何奖项，谢谢您的参与！'
+	});
+
+	lot.addPrize('特等奖', '宝马一辆', 1);
+	lot.addPrize('一等奖', 'Mac Pro一台', 1);
+	lot.addPrize('二等奖', 'MacBook Pro一台', 1);
+
+	lot.setLogFile('/Users/Apple/Downloads/lot.xlsx');
+
+	pm.ReplyManager.addProcess(lot);
+	
+### 4. SecKill 秒杀:
+
+示例如下:
+
+	var sk = new pm.ReplyProcess.SecKill();
+
+	sk.setTime('2013/11/13 12:00:00', '2013/11/13 13:00:00');
+
+	sk.setKey(['秒杀', 'ms']);
+
+	sk.setContent({
+    	beforeEvent : '秒杀还未开始！',
+    	repeat : '您已成功秒杀！每人只可秒杀一次！',
+    	afterEvent : '秒杀已经结束！',
+    	success : '恭喜您获得 - NAME ，稍后我们将私信联系您。',
+    	none : '商品已经全部被秒杀！'
+	});
+
+	sk.setPrize('宝马一辆', 1);
+
+	sk.setLogFile('/Users/Apple/Downloads/sk.xlsx');
+
+	pm.ReplyManager.addProcess(sk);
 
 
 ## Debug 调试信息:

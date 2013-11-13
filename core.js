@@ -8,9 +8,12 @@
         Message : require('./lib/model/Message'),
         ReplyManager : require('./lib/manager/ReplyManager'),
         ReplyProcess : {
-            replyForText :  require('./lib/process/ReplyForText'),
-            replyForEvent :  require('./lib/process/ReplyForEvent')
+            replyForText : require('./lib/process/ReplyForText'),
+            replyForEvent : require('./lib/process/ReplyForEvent'),
+            Lottery : require('./lib/process/Lottery'),
+            SecKill : require('./lib/process/SecKill')
         },
+        OpenAPI : require('./lib/network/OpenAPI'),
         Debug : require('./lib/util/Debug')
     };
 
