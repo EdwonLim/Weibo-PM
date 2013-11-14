@@ -14,11 +14,17 @@ pm.ReplyManager.openFloor({
     items : {
         'js' : '欢迎来到js脚本目录！输入 1 、 2 查看相应内容。',
         'css' : '欢迎来到css样式目录！输入 1 、 2 查看相应内容。',
-        'html' : '欢迎来到html页面目录！输入 1 、 2 查看相应内容。'
+        'html' : '欢迎来到html页面目录！输入 1 、 2 查看相应内容。',
+        '客服' : null
     },
     hotKey : ['menu', '菜单'],
     helpText : '欢迎来到此地，请输入"js","css","html"进入相应目录，输入"0"退出相应目录。',
-    backText : '已退出目录"FLOOR"。',
+    backText : {
+        'js' : '已经退出 js 目录。',
+        'css' : '已经退出 css 目录。',
+        'html' : '已经退出 html 目录。',
+        '客服' : null
+    },
     backKey : ['0'],
     timeout : 300
 });
@@ -105,6 +111,35 @@ sk.setLogFile('/Users/Apple/Downloads/sk.xlsx');
 
 pm.ReplyManager.addProcess(sk);
 
-// 开始进程
+// 客服系统
+
+var cs = new pm.ReplyProcess.CustomerService();
+
+cs.setTime('9:30', '19:00');
+
+cs.setKey(['客服']);
+
+cs.setWorkers({
+    '小洋' : '2609545991'
+});
+
+cs.setContent({
+    outerTime : '对不起，现在不是客服服务时间。\n（服务时间9:30~18:30）',
+    enter : '欢迎使用客服系统，系统正在自动为您连接客服人员，请稍候！\n(发送0可以退出客服系统)',
+    follow : '【注意】由于系统限制，关注本账号，成为本账号的粉丝，才能正常使用客服系统。',
+    wait : '【排队中】现在业务非常繁忙，请您稍等片刻！',
+    startConv : '已经连接到客服人员，客服【 NAME 】为您服务！',
+    stopConv : '您已经退出客服系统，欢迎下次再次使用。',
+    worker : '【 NAME 】:\n欢迎进入客服人员工作系统:\n发送next接待下一位客户；\n发送exit退出与当前客户的交流；\n发送0退出客服系统。',
+    none : '客服系统中现在没有等待的客户。',
+    new : '有新客户进入客服系统，发送next进行接待。',
+    startWork : '客户已经接入。',
+    stopWork : '和客户的交谈已经结束，发送next接待下一位客户。',
+    notSupport : '对不起，客服系统不支持您的消息类型。'
+});
+
+pm.ReplyManager.addProcess(cs);
+
+// 开启回复管理
 
 pm.ReplyManager.start();

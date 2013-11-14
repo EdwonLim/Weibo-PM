@@ -266,6 +266,40 @@
 	pm.ReplyManager.addProcess(sk);
 
 
+
+## CustomerService 客服系统 - 高级处理过程:
+
+示例如下：
+
+	var cs = new pm.ReplyProcess.CustomerService();
+
+	cs.setTime('9:30', '19:00');
+
+	cs.setKey(['客服']);
+
+	// 设置客服人员名称和对应的微博id
+	cs.setWorkers({
+    	'小洋' : '2609545991'
+	});
+
+	cs.setContent({
+    	outerTime : '对不起，现在不是客服服务时间。\n（服务时间9:30~18:30）',
+    	enter : '欢迎使用客服系统，系统正在自动为您连接客服人员，请稍候！\n(发送0可以退出客服系统)',
+    	follow : '【注意】由于系统限制，关注本账号，成为本账号的粉丝，才能正常使用客服系统。',
+    	wait : '【排队中】现在业务非常繁忙，请您稍等片刻！',
+    	startConv : '已经连接到客服人员，客服【 NAME 】为您服务！',
+    	stopConv : '您已经退出客服系统，欢迎下次再次使用。',
+    	worker : '【 NAME 】:\n欢迎进入客服人员工作系统:\n发送next接待下一位客户；\n发送exit退出与当前客户的交流；\n发送0退出客服系统。',
+    	none : '客服系统中现在没有等待的客户。',
+    	new : '有新客户进入客服系统，发送next进行接待。',
+    	startWork : '客户已经接入。',
+    	stopWork : '和客户的交谈已经结束，发送next接待下一位客户。',
+    	notSupport : '对不起，客服系统不支持您的消息类型。'
+	});
+
+	pm.ReplyManager.addProcess(cs);
+
+
 ## Debug 调试信息:
 
 开启调试信息输出:
