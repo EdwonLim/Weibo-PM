@@ -11,6 +11,8 @@
 
 ![NPM](https://nodei.co/npm/weibo-pm.png)
 
+* 从0.5.0版本开始，为完整的稳定版本。
+
 ------
 
 ## Function 功能:
@@ -265,43 +267,84 @@
 
 ### 启动:
 
+```
 	pm.ReplyManager.start()
-	
-启动后，基本API Listener会失效。
+```	
+启动后，基本API Listener会失效。（**基本API Listener不是队列是单个绑定**）
 
 ### 开启分级目录功能:
 
+目录配置信息:
+* `items` : 目录（功能）及进入目录后，提示的信息（下面的配置中`js`，`css`，`html`对应的是目录，而`咨询`，`投诉`，`反馈`，`客服`则是对应的功能，将在后面具体讲解）
+* `hotKey` : 关键词，用户发送关键词，会回复目录帮助信息
+* `helpText` : 目录帮助信息
+* `backText` : 退出目录返回的信息
+* `backKey` : 退出目录的关键词
+* `timeout` : 自动退出目录的等待时间，单位是秒 300表示5分钟没有消息，自动退出目录到根目录。
+
+```
 	pm.ReplyManager.openFloor({
-    	items : {  // 目录和进入目录显示的消息
-        	"js" : "欢迎来到js脚本目录！输入 1 、 2 查看相应内容。", 
-        	"css" : "欢迎来到css样式目录！输入 1 、 2 查看相应内容。",
-        	"html" : "欢迎来到html页面目录！输入 1 、 2 查看相应内容。"
-    	},
-    	hotKey : ["menu", "菜单"], // 显示菜单帮助的命令
-    	helpText : "欢迎来到此地，请输入'js', 'css', 'html'进入相应目录，输入'0'退出相应目录。", // 菜单帮助消息
-    	backText : "已退出目录'FLOOR'。", // 退出目录显示的消息
-    	backKey : ["0"], // 退出目录的命令
-    	timeout : 300 // 自动退出目录的时间，单位s，300表示5分钟自动退出到根目录
-	});
+        "items": {
+            "js": "欢迎来到js脚本目录！发送 1 、 2  、 3 查看相应内容。",
+            "css": "欢迎来到css样式目录！发送 1 、 2  、 3 查看相应内容。",
+            "html": "欢迎来到html页面目录！发送 1 、 2 、 3 查看相应内容。",
+            "咨询": "请输入您需要咨询的问题。",
+            "投诉": "请输入您需要投诉的问题。",
+            "反馈": "请输入您需要反馈的问题。",
+            "客服": null
+        },
+        "hotKey": ["menu", "菜单"],
+        "helpText": "欢迎您的访问：\n请发送\"js\",\"css\",\"html\"进入相应目录，输入\"0\"退出相应目录；\n发送`咨询`，`投诉`，`反馈`，`客服`进入相应功能。",
+        "backText": {
+            "js": "已经退出 js 目录。",
+            "css": "已经退出 css 目录。",
+            "html": "已经退出 html 目录。"
+        },
+        "backKey": ["0"],
+        "timeout": 300
+    });
+```    
+
+### 处理过程:
+
+处理过程是真正处理消息和回复消息的业务逻辑，开发者这可以自定义一些业务逻辑。
+
+处理过程是一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor` 中的一个或几个方法，当有相应事件时，会调用对应方法，接收到消息后，进项处理。
+
+```
+	var Process = {
+		onMessage : function(msg, reply, floor) {}, // 有私信消息
+		onEvent : function(msg, reply) {}, // 有事件消息
+		onMetion : function(msg, reply) {}, // 有@消息
+		onQuitFloor : function(msg, reply, floor) {}, // 退出目录
+		onEnterFloor : function(msg, reply, floor) {} // 进入目录
+	}
+
+```
+
+参数中`msg`是消息，`reply`是`pm.Message`实体，已经设置好`id`和`uid`，设置回复内容后，可直接发送，`floor`为目录，开启目录功能后，会有此参数。
 	
 ### 增加处理过程:
 
-	pm.ReplyManager.addProcess({
-		onMessage : function(msg, reply, floor) {},
-		onEvent : function(msg, reply) {},
-		onMetion : function(msg, reply) {},
-		onQuitFloor : function(msg, reply) {},
-		onEnterFloor : function(msg, reply) {}
-	});
-	
-处理过程为一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor` 中的一个或几个方法，当有相应事件时，会调用此方法。
-
-参数中`msg`是消息，`reply`是`pm.Message`实体，已经设置好`id`，设置回复内容后，可直接发送，`floor`为目录，开启目录功能后，会有此参数
+```
+	pm.ReplyManager.addProcess(process);
+```
 
 ### 删除处理过程:
-	
-	pm.ReplyManager.removeProcess(process);
 
+```	
+	pm.ReplyManager.removeProcess(process);
+```
+
+------
+
+## 华丽丽地分割一下
+
+### 上面的是基本的数据交互接口，开发者可以基于它构建自己的自动回复管理工具。
+
+### 下面将是4类6种已经完成的处理功能，可以配置后直接使用。
+
+------
 
 ## Process 处理过程:
 
