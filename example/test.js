@@ -10,4 +10,4 @@ pm.Debug.open();
 pm.init('username', 'uid', 'password', 'appkey');
 
 // 配置
-pm.configure(JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf-8')));
+pm.configure(JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf-8')), __dirname);

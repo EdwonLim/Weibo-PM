@@ -1,11 +1,11 @@
 {
   "name": "weibo-pm",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Private message manager tool of Sina Weibo fan service.",
   "main": "core.js",
   "repository": {
     "type": "git",
-    "url": "git@gitcafe.com:EdwonLim/Weibo-PM.git"
+    "url": "git@github.com:EdwonLim/Weibo-PM.git"
   },
   "keywords": [
     "weibo",
@@ -13,7 +13,10 @@
     "message"
   ],
   "dependencies": {
-    "node-xlsx": ">= 0.2.2"
+    "node-xlsx": ">= 0.2.2",
+    "nodemailer": ">= 0.5.6",
+    "form-node": ">= 0.1.2",
+    "request": ">= 2.27.0"
   },
   "author": "Edwon Lim"
 }

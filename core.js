@@ -1,8 +1,16 @@
 (function(module) {
 
+    var fs = require('fs'),
+        path = require('path');
+
     var Core = {
-        init : require('./lib/UserInfo').init,
-        configure : function(options) {
+        init : function(username, uid, password, appkey, config) {
+            require('./lib/UserInfo').init(username, uid, password, appkey);
+            if (config) {
+                require('./lib/network/MessageListener').openFilter(config.startId, config.endId, config.addon);
+            }
+        },
+        configure : function(options, basePath) {
             if (options) {
                 var process;
                 if (options.floor) {
@@ -26,35 +34,50 @@
                     process.setContent(options.customer.content);
                     Core.ReplyManager.addProcess(process);
                 }
+                if (options.box) {
+                    options.box.forEach(function(e) {
+                        process = new Core.ReplyProcess.MailBox(e.name);
+                        process.setKey(e.key);
+                        process.setContent(e.content);
+                        process.setType(e.type, e.data);
+                        Core.ReplyManager.addProcess(process);
+                    });
+                }
                 if (options.event) {
                     options.event.forEach(function(e) {
                         switch (e.type) {
                             case 'Lottery' :
-                                process = new Core.ReplyProcess.Lottery();
+                                process = new Core.ReplyProcess.Lottery(e.name);
                                 process.setTime(e.startTime, e.endTime);
                                 process.setKey(e.key);
                                 process.setContent(e.content);
                                 e.prize.forEach(function(item){
                                     process.addPrize.apply(process, item);
                                 });
-                                process.setLogFile(e.log);
+                                process.setLogFile(e.log || (basePath + '/' + e.name + '.xlsx'));
                                 Core.ReplyManager.addProcess(process);
                                 break;
                             case 'SecKill' :
-                                process = new Core.ReplyProcess.SecKill();
+                                process = new Core.ReplyProcess.SecKill(e.name);
                                 process.setTime(e.startTime, e.endTime);
                                 process.setKey(e.key);
                                 process.setContent(e.content);
                                 process.setPrize(e.prize.name, e.prize.num);
-                                process.setLogFile(e.log);
+                                process.setLogFile(e.log || (basePath + '/' + e.name + '.xlsx'));
                                 Core.ReplyManager.addProcess(process);
                                 break;
                        }
                     });
                 }
             }
+            Core.FileDataBase.init(basePath);
             Core.ReplyManager.start();
+
+            if (!fs.existsSync(path.resolve('tmp'))) {
+                fs.mkdirSync(path.resolve('tmp'));
+            }
         },
+        User : require('./lib/UserInfo'),
         listener : require('./lib/network/MessageListener'),
         send : require('./lib/network/MessageSend'),
         reply : require('./lib/network/MessageReply'),
@@ -65,9 +88,12 @@
             replyForEvent : require('./lib/process/ReplyForEvent'),
             Lottery : require('./lib/process/Lottery'),
             SecKill : require('./lib/process/SecKill'),
-            CustomerService : require('./lib/process/CustomerService')
+            CustomerService : require('./lib/process/CustomerService'),
+            MailBox : require('./lib/process/MailBox')
         },
         OpenAPI : require('./lib/network/OpenAPI'),
+        Upload : require('./lib/network/Upload'),
+        FileDataBase : require('./lib/util/FileDataBase'),
         Debug : require('./lib/util/Debug')
     };
 
