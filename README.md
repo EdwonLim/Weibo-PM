@@ -135,12 +135,12 @@
 
 ```
 	// GET 请求
-	pm.OpenAPI.get('users/show', 'uid=1908736117', function(data) {
+	pm.OpenAPI.get("users/show", "uid=1908736117", function(data) {
 		// 处返回理数据
 	});
 	
 	// POST 请求
-	pm.OpenAPI.post('statuses/update', 'status=' + encodeURIComponent('这是一条测试微博'), function(data) {
+	pm.OpenAPI.post("statuses/update", "status=" + encodeURIComponent("这是一条测试微博"), function(data) {
 		// 处返回理数据
 	});
 ```
@@ -230,7 +230,7 @@
 设置二维码信息，将发出带有图片的消息
 
 ```
-	message.setQrCode("This is 'QRCode Info'.");
+	message.setQrCode("This is \"QRCode Info\".");
 ```
     
 成功回调
@@ -563,10 +563,10 @@
 
 ```	
 	// 创建MailBox实例
-	var mb = new pm.ReplyProcess.MailBox('咨询系统');
+	var mb = new pm.ReplyProcess.MailBox("咨询系统");
 	
 	// 设置相应关键字
-    mb.setKey('咨询');
+    mb.setKey("咨询");
     
     // 设置回复内容
     mb.setContent({
@@ -575,7 +575,7 @@
     });
     
     // 设置类型 message 第二个参数为uid列表，是转发给的用户的id
-    mb.setType('message', ["2609545991"]);
+    mb.setType("message", ["2609545991"]);
     
     // 添加处理过程
     pm.ReplyManager.addProcess(mb);
@@ -592,10 +592,10 @@
 
 ```	
 	// 创建MailBox实例
-	var mb = new pm.ReplyProcess.MailBox('投诉系统');
+	var mb = new pm.ReplyProcess.MailBox("投诉系统");
 	
 	// 设置相应关键字
-    mb.setKey('投诉');
+    mb.setKey("投诉");
     
     // 设置回复内容
     mb.setContent({
@@ -604,7 +604,7 @@
     });
     
     // 设置类型 
-    mb.setType('mail', {
+    mb.setType("mail", {
     	"host": "smtp.163.com", // 邮件服务器，暂时仅支持stmp协议
     	"secureConnection": true, // 加密否
     	"port": 465, // 端口
@@ -629,10 +629,10 @@
 
 ```	
 	// 创建MailBox实例
-	var mb = new pm.ReplyProcess.MailBox('反馈系统');
+	var mb = new pm.ReplyProcess.MailBox("反馈系统");
 	
 	// 设置相应关键字
-    mb.setKey('反馈');
+    mb.setKey("反馈");
     
     // 设置回复内容
     mb.setContent({
@@ -641,7 +641,7 @@
     });
     
     // 设置类型 
-    mb.setType('server', {
+    mb.setType("server", {
     	"url" : "http://127.0.0.1:8080/",
     	"token" : "feedback"
     });
