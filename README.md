@@ -434,37 +434,41 @@
 
 	pm.ReplyManager.addProcess(rft);
 ```
-* 配图1：
+* 图示1：
 ![配图](http://ww1.sinaimg.cn/large/71c50075jw1eao7hfzro1j209008pt8x.jpg)
 
-* 配图2：
+* 图示2：
 ![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao7gcr3n0j208w08k3yq.jpg)
 
-* 配图3：
+* 图示3：
 ![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao7ixb8p5j208x08kglx.jpg)
 
-* 配图4：
+* 图示4：
 ![配图](http://ww2.sinaimg.cn/large/71c50075jw1eao7jiubsej209108ut93.jpg)
 
 ------
 
+## Event 活动:
 
+### 1.Lottery 乐透大抽奖
 
+抽奖活动：通过私信发送固定消息后可以参与抽奖，结束时，会随机抽出幸运用户，自动发送获奖和未获奖的消息。 可以创建多次抽奖活动。
 
-
-
-
-
-### 3. Lottery 抽奖:
+组件: `pm.ReplyProcess.Lottery`
 
 示例如下:
 
+```	
+	// 创建示例
 	var lot = new pm.ReplyProcess.Lottery();
 
-	lot.setTime("2013/11/13 12:00:00", "2013/11/13 13:00:00");
+	// 设置开始和结束时间
+	lot.setTime("2013/11/11 00:00:00", "2013/11/11 01:00:00");
 
+	// 设置参与活动的固定消息
 	lot.setKey(["抽奖", "cj"]);
 
+	// 设置回复内容
 	lot.setContent({
     	beforeEvent : "抽奖还未开始！",
     	onEvent : "成功参与抽奖，请耐心等待结果！",
@@ -474,24 +478,43 @@
     	none : "很遗憾，您没有抽中任何奖项，谢谢您的参与！"
 	});
 
+	// 增加奖项
 	lot.addPrize("特等奖", "宝马一辆", 1);
 	lot.addPrize("一等奖", "Mac Pro一台", 1);
 	lot.addPrize("二等奖", "MacBook Pro一台", 1);
 
+	// 设置结果输出文件 Excel
 	lot.setLogFile("/Users/Apple/Downloads/lot.xlsx");
 
+	// 增加处理过程
 	pm.ReplyManager.addProcess(lot);
+```
 	
-### 4. SecKill 秒杀:
+获取结果 : `lot.getResult();`
+
+图示:
+![图例](http://ww2.sinaimg.cn/large/71c50075jw1eao83ffbq2j209108rglw.jpg)
+
+	
+### 2. SecKill 秒杀:
+
+抽奖活动：通过私信发送固定消息后可以参与秒杀，秒杀按照私信先来后到来排序，先到先得，秒完为止。 可以创建多次秒杀活动。
+
+组件: `pm.ReplyProcess.SecKill`
 
 示例如下:
 
+```	
+	// 创建秒杀活动实例
 	var sk = new pm.ReplyProcess.SecKill();
 
-	sk.setTime("2013/11/13 12:00:00", "2013/11/13 13:00:00");
+	// 设置开始和结束时间
+	sk.setTime("2013/11/11 00:00:00", "2013/11/11 01:00:00");
 
+	// 设置参与活动的固定消息
 	sk.setKey(["秒杀", "ms"]);
 
+	// 设置回复内容
 	sk.setContent({
     	beforeEvent : "秒杀还未开始！",
     	repeat : "您已成功秒杀！每人只可秒杀一次！",
@@ -499,12 +522,136 @@
     	success : "恭喜您获得 - NAME ，稍后我们将私信联系您。",
     	none : "商品已经全部被秒杀！"
 	});
-
+	
+	// 增加奖项
 	sk.setPrize("宝马一辆", 1);
 
+	// 设置结果输出文件 Excel
 	sk.setLogFile("/Users/Apple/Downloads/sk.xlsx");
 
+	// 增加处理过程
 	pm.ReplyManager.addProcess(sk);
+```
+
+获取结果 : `sk.getResult();`
+
+图示:
+
+![图例](http://ww2.sinaimg.cn/large/71c50075jw1eao8betq7gj209a08v74i.jpg)
+
+------
+
+## MailBox 信箱:
+
+信箱，留言箱，提供用户留言功能，并具有分类的功能（创建多个MailBox实例），为大V提供真正的留言功能。
+
+组件: `pm.ReplyProcess.MailBox`
+
+它能将用户的留言以三种形式存储：
+1. 以私信的形式转发给其他固定的账号，这是这个账号和大V得私信列表就是留言记录。
+2. 以邮件的形式发到固定的账号，当然两个邮件账号之间的邮件列表就是留言记录，而且方便处理。
+3. 以http post形式提交到指定的url，这个适用于公司有自己的留言系统的。
+
+### 私信形式:
+
+示例代码
+
+```	
+	// 创建MailBox实例
+	var mb = new pm.ReplyProcess.MailBox('咨询系统');
+	
+	// 设置相应关键字
+    mb.setKey('咨询');
+    
+    // 设置回复内容
+    mb.setContent({
+    	"success": "您的咨询问题已经收到，我们将找专业人员为您解答！",
+    	"notSupport": "对不起，系统不支持您的消息类型。"
+    });
+    
+    // 设置类型 message 第二个参数为uid列表，是转发给的用户的id
+    mb.setType('message', ["2609545991"]);
+    
+    // 添加处理过程
+    pm.ReplyManager.addProcess(mb);
+```
+
+* 图示1:
+![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao8whr2jtj208w08mt8y.jpg)
+* 图示2:
+![配图](http://ww1.sinaimg.cn/large/71c50075jw1eao8xdlaz4j20gk087weq.jpg)
+
+### 邮件形式
+
+示例代码
+
+```	
+	// 创建MailBox实例
+	var mb = new pm.ReplyProcess.MailBox('投诉系统');
+	
+	// 设置相应关键字
+    mb.setKey('投诉');
+    
+    // 设置回复内容
+    mb.setContent({
+    	"success": "您的投诉问题已经收到，我们将找专业人员为您解答！",
+    	"notSupport": "对不起，系统不支持您的消息类型。"
+    });
+    
+    // 设置类型 
+    mb.setType('mail', {
+    	"host": "smtp.163.com", // 邮件服务器，暂时仅支持stmp协议
+    	"secureConnection": true, // 加密否
+    	"port": 465, // 端口
+    	"user": "yinxl_002@163.com", // 发邮件的邮箱账户
+    	"pass": "******", // 对应的密码
+    	"toUser": "edwon.lim@gmail.com" // 发给的邮箱账户
+    });
+    
+    // 添加处理过程
+    pm.ReplyManager.addProcess(mb);
+```
+
+* 图示1:
+![配图](http://ww2.sinaimg.cn/large/71c50075jw1eao92ii1ntj209c08smxg.jpg)
+* 图示2:
+![配图](http://ww1.sinaimg.cn/large/71c50075jw1eao92ubwdrj20cv0863yp.jpg)
+
+
+### Post形式
+
+示例代码
+
+```	
+	// 创建MailBox实例
+	var mb = new pm.ReplyProcess.MailBox('反馈系统');
+	
+	// 设置相应关键字
+    mb.setKey('反馈');
+    
+    // 设置回复内容
+    mb.setContent({
+    	"success": "您的反馈问题已经收到，我们将找专业人员为您解答！",
+    	"notSupport": "对不起，系统不支持您的消息类型。"
+    });
+    
+    // 设置类型 
+    mb.setType('server', {
+    	"url" : "http://127.0.0.1:8080/",
+    	"token" : "feedback"
+    });
+    
+    
+    // 添加处理过程
+    pm.ReplyManager.addProcess(mb);
+```
+
+注意：为了防止`url`被非法提交，`server`接收的`post`参数里有`token`，`tag`，`timestamp`三个参数，
+其中 `token` 应该等于 `sha1(tag + static_token + timestamp)`，`static_token`为配置中的`feedback`。
+
+因为`static_token`是不公开的，服务器可以通过`token`验证请求是不是来自本系统，从而排除非法提交。
+
+------
 
 
 
