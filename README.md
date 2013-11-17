@@ -163,61 +163,105 @@
 
 ------ 
 
-## Advanced API 高级接口:
+## Message Model 消息实体：
 
-### 1. Message Model 消息类：
+在每次回复和发送私信的过程中，都可以创建一个消息实体
 
-在每次回复和发送私信的过程中，都可以新建一个消息实体
-
+```
     var message = new pm.Message();    
+```
 
-设置需要回复的消息的id或者用户的id
+设置需要回复的消息的id或者用户的id (**两者必选其一**)
  
+```
     message.setId("msg id");
     message.setUid("user id");
+```
 
-设置文本，将发出文本消息
- 
+设置文本信息，将发出文本消息
+
+```
     message.setText("message text");
+```
 
-添加图文信息，将发出图文消息，展示为Card
- 
+添加图文信息，将发出图文消息，展示为媒体Card
+
+```
     message.addArticle("title", "summary", "image", "url");
+```
 
 设置地理位置，将发出地理位置的消息
- 
+
+```
 	message.setPosition("longitude", "latitude");
+```
     
 设置图片（上传所得的id），将发出带有图片的消息
  
+```
     message.setImage(vfid, tovfid);
+```
+
+设置图片路径，将发出带有图片的消息
+
+```
+	message.setImagePath("/path/to/file");
+```
+
+设置图片网络路径，将发出带有图片的消息
+
+```
+	message.setImageUrl("http://path/to/file");
+```
+
+设置图片微盘id，将发出带有图片的消息
+
+```
+	message.setImageId(id);
+```
+
+设置二维码信息，将发出带有图片的消息
+
+```
+	message.setQrCode("This is 'QRCode Info'.");
+```
     
 成功回调
  
+```
     message.success(function(rs) {
-        // Execute Success RS
+        // 处理成功结果
     });
+```
 
 失败错误回调
- 
+
+```
     message.error(function(rs) {
-        // Execute Error RS
+        // 处理失败结果
     });
+```
 
 开始发送
- 
+
+```
     message.send();
+```
 
 简单示例
- 
+
+``` 
     new Message()
         .setUid("1908736117")
         .setText("Hello World!")
         .success(function(rs){alert("success")})
         .error(function(rs){alert("error")})
         .send();
+```
+
+-----
     
-### 2.Reply Manager 回复管理器:
+## Reply Manager 回复管理器:
 
 ### 启动:
 
