@@ -434,13 +434,16 @@
 
 	pm.ReplyManager.addProcess(rft);
 ```
-配图1：
+* 配图1：
 ![配图](http://ww1.sinaimg.cn/large/71c50075jw1eao7hfzro1j209008pt8x.jpg)
-配图2：
+
+* 配图2：
 ![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao7gcr3n0j208w08k3yq.jpg)
-配图3：
+
+* 配图3：
 ![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao7ixb8p5j208x08kglx.jpg)
-配图4：
+
+* 配图4：
 ![配图](http://ww2.sinaimg.cn/large/71c50075jw1eao7jiubsej209108ut93.jpg)
 
 ------
