@@ -311,6 +311,11 @@
 
 处理过程是一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor` 中的一个或几个方法，当有相应事件时，会调用对应方法，接收到消息后，进项处理。
 
+每个方法都可以有返回值
+
+* 如果返回值是"break"，那么消息不会继续进入到后续的处理过程中，类似于阻止冒泡
+* 如果返回值是"keep"，那么此目录的有效时间将变为1天
+
 ```
 	var Process = {
 		onMessage : function(msg, reply, floor) {}, // 有私信消息
@@ -330,6 +335,27 @@
 	pm.ReplyManager.addProcess(process);
 ```
 
+添加处理过程后，会为process添加3个方法
+
+销毁处理过程(不是真正的销毁，是从处理过程的队列里移除):
+
+```
+	process.destory();
+```
+
+重置用户至根目录:
+
+```
+	process.resetUser(uid)
+```
+
+移动用户到固定目录:
+
+```
+	// 用户id，目录，目录持续时间
+	process.moveUser(uid, floor, time);
+```
+
 ### 删除处理过程:
 
 ```	
@@ -346,50 +372,85 @@
 
 ------
 
-## Process 处理过程:
+## Static Auto Reply 静态自动回复:
 
-可以自定义处理过程来进行消息的自动处理和回复。
-
-下面已经完成的`4`个`Process`，之后会逐渐增加。
+根据用户的消息/事件，静态匹配，并自动回复静态内容。
 
 ### 1. ReplyForEvent 事件自动回复:
 
+组件: `pm.ReplyProcess.replyForEvent`
+
+根据用户的关注/取消关注事件，回复静态消息。
+
 示例如下:
 
+```
 	var rfe = pm.ReplyProcess.replyForEvent;
 
 	rfe.init({
-    	"follow" : "亲！欢迎关注本账号！输入 menu 或 菜单 查看相应内容。",
-    	"unfollow" : "不要离开我，行不行吗？呜呜！"
+    	"follow" : "亲！欢迎关注本账号！输入 menu 或 菜单 查看相应内容。", // 关注回复
+    	"unfollow" : "不要离开我，行不行吗？呜呜！" // 取消关注回复
 	});
 
 	pm.ReplyManager.addProcess(rfe);
-	
+```
+![配图](http://ww2.sinaimg.cn/large/71c50075jw1eao79t12e1j20cn0e0gmu.jpg)
+
+
 ### 2. ReplyForText 文本消息自动回复:
+
+组件: `pm.ReplyProcess.replyForText`
+
+根据用户的文本消息，回复静态消息。
 
 示例如下:
 
+```
 	var rft = pm.ReplyProcess.replyForText;
 
 	rft.init({
-    	"js" : {
-        	"1" : ["text", "js是很神奇的东西"],
-     		"2" : ["articles", [
-                	["js很牛", "js太牛了", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1", "http://weibo.com"],
-                	["js很牛逼", "js太牛逼了", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1", "http://weibo.com"]
-              	]]
-    	},
-    	"css" : {
-        	"1" : ["text", "css是很神奇的东西"],
-        	"2" : ["image", 1055597360, 1055597367]
-    	},
-    	"html" : {
-        	"1" : ["text", "html是很神奇的东西"],
-        	"2" : ["position", "116.309868", "39.984371"]
-    	}
-	});
+        "js": {
+            "1": ["text", "js是很神奇的东西"],
+            "2": [
+                "articles",
+                [
+                    ["js很牛", "js太牛了", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1", "http://weibo.com"],
+                    ["js很牛逼", "js太牛逼了", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1", "http://weibo.com"]
+                ]
+            ],
+            "3" : ["imagePath", "/Users/Apple/Documents/npm.png"]
+        },
+        "css": {
+            "1": ["text", "css是很神奇的东西"],
+            "2": ["image", 1055597360, 1055597367],
+            "3": ["imageUrl", "http://tp2.sinaimg.cn/1908736117/180/5678518790/1"]
+        },
+        "html": {
+            "1": ["text", "html是很神奇的东西"],
+            "2": ["position", "116.309868", "39.984371"],
+            "3": ["qrCode", "http://weibo.com"]
+        }
+    });
 
 	pm.ReplyManager.addProcess(rft);
+```
+配图1：
+![配图](http://ww1.sinaimg.cn/large/71c50075jw1eao7hfzro1j209008pt8x.jpg)
+配图2：
+![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao7gcr3n0j208w08k3yq.jpg)
+配图3：
+![配图](http://ww4.sinaimg.cn/large/71c50075jw1eao7ixb8p5j208x08kglx.jpg)
+配图4：
+![配图](http://ww2.sinaimg.cn/large/71c50075jw1eao7jiubsej209108ut93.jpg)
+
+------
+
+
+
+
+
+
+
 
 ### 3. Lottery 抽奖:
 
