@@ -11,6 +11,8 @@
 
 ![NPM](https://nodei.co/npm/weibo-pm.png)
 
+------
+
 ## Function 功能:
 
 1. 消息自动回复：回复内容包括文本消息、媒体Card、包含图片的消息、包含地理位置的消息。
@@ -19,6 +21,8 @@
 4. 留言箱：用户可以给不同的对象留言，例如投诉、询问，支持将留言转发至私信，邮件以及URL提交。
 5. 活动事件：通过私信进行活动，如抽奖和秒杀，并将结果制成Excel。
 6. 客服系统：通过私信转发，实现一个账号，多人接入的客服系统，一个大V账号可以接多个客服（微博账号），用户与大V账号的私信会被转发到客服账号。
+
+支持二维码生成、邮件功能、上传功能等。
 
 ------
 
@@ -43,7 +47,7 @@
 
 ### 1.Initialize 初始化:
 
-初始化模块 ： 用户名，用户id，用户密码，在粉丝服务器管理平台中绑定的appkey
+初始化模块 ： 用户名，用户id，用户密码，在粉丝服务器管理平台中绑定的appkey （**此用户要对APPKEY授权**）
  
 ```
 	pm.init(username, uid, password, appkey);
@@ -52,54 +56,112 @@
 ### 2.Receive Message 接收消息:
 
 监听所有消息
- 
+
+```
 	pm.listener.on(function(msg) {
 		// 处理消息
 	});
+```
 
 监听事件消息（关注和取消关注）
- 
+
+``` 
 	pm.listener.onEvent(function(msg) {
         // 处理消息
     });
+```
 
 监听私信消息（包括文本，图片，地理位置，语音等）
  
+``` 
 	pm.listener.onMessage(function(msg) {
         // 处理消息
     });
+```
     
 监听@消息 （**需要申请高级权限**）
- 
+
+``` 
     pm.listener.onMention(function(msg) {
         // 处理消息
     });
+```
 
 ### 3.Start Listener 启动监听:
 
 启动监听（**每4分钟会自动重新建立HTTP长连接（文档上要求的，为了减少服务器压力）**）
 
+```
     pm.listener.start();
+```
 
 ### 4.Rely Message 回复消息:
 
 需要回复的消息的id，类型和数据，详细参看文档 （**每条消息最多只可被回复 3 次**）
  
+``` 
 	pm.rely(msgId, type, data, function(rs) {
 		// 处理结果
 	});
+```
 	
 文档：[http://open.weibo.com/wiki/2/messages/reply](http://open.weibo.com/wiki/2/messages/reply)
 
 ### 5.Send Message 发送消息:
 
 用户id，类型和数据，详细参看文档 (**只可给粉丝发送消息**)
- 
+
+``` 
 	pm.send(uid, type, data, function(rs) {
-		//TODO Execute Result
+		// 处理结果
 	});
+```
 
 文档：[http://open.weibo.com/wiki/2/messages/send](http://open.weibo.com/wiki/2/messages/send)
+
+### 6.Post Message 推送消息:
+
+给`订阅用户`推送消息 (**此接口还没开放，开放后，会及时更新**)
+
+-----
+
+## Extend API 拓展接口:
+
+### 1.Open API 开放平台接口:
+
+可以通过此接口，调用微博开放平台的接口，详细参看文档 （**暂不支持Post提交文件**）
+
+```
+	// GET 请求
+	pm.OpenAPI.get('users/show', 'uid=1908736117', function(data) {
+		// 处返回理数据
+	});
+	
+	// POST 请求
+	pm.OpenAPI.post('statuses/update', 'status=' + encodeURIComponent('这是一条测试微博'), function(data) {
+		// 处返回理数据
+	});
+```
+
+### 2.Upload API 上传接口:
+
+可以通过此接口，上传文件到微盘
+
+```
+	pm.Upload(options, function(data) {
+		// 处理返回数据，返回数据中包含fid, vfid, tovfid及几张缩略图的地址。
+	});
+```
+`options`参数如下：
+* `toUid` : 对方的用户id，必选，否则对方看不到
+* `fid` : 文件的id（微盘） 可选 自动下载后再上传
+* `filePath` : 文件的路径 可选
+* `url` : 文件的网络地址 可选 自动下载后再上传
+* `qrCode` : 二维码包含的信息 可选 先生成二维码，再上传
+
+`fid`, `filePath`, `url`, `qrCode` 选择其一。
+
+------ 
 
 ## Advanced API 高级接口:
 
