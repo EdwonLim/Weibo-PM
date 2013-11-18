@@ -1,3 +1,8 @@
+/**
+ * Core
+ * @author Edwon Lim
+ * @email Edwon.Lim@gmail.com
+ */
 (function(module) {
 
     var fs = require('fs'),
