@@ -108,7 +108,11 @@
         Upload : require('./lib/network/Upload'),
         FileDataBase : require('./lib/util/FileDataBase'),
         Base62 : require('./lib/util/Base62'),
-        Debug : require('./lib/util/Debug')
+        Debug : require('./lib/util/Debug'),
+        Reset : function() {
+            Core.ReplyManager.reset();
+            Core.MentionManager.reset();
+        }
     };
 
     module.exports = Core;

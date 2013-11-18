@@ -335,6 +335,12 @@
 	pm.MentionManager.removeCommentListener(statusId);
 ```
 
+### 重置@管理器:
+
+```
+	pm.ReplyManager.reset();
+```
+
 -----
     
 ## Reply Manager 回复管理器:
@@ -433,6 +439,12 @@
 
 ```	
 	pm.ReplyManager.removeProcess(process);
+```
+
+### 重置回复管理器:
+
+```
+	pm.ReplyManager.reset();
 ```
 
 ------
@@ -641,6 +653,7 @@
 	rd.setContent({
     	repostSuccess : "非常感谢您转发我们的微博，现在您可以回复\"优惠\"获得优惠券。",
     	success : "您已经成功获得优惠劵，消费时请出示微博昵称即可。",
+    	repeat : "您已经获得过优惠券，请不要重复获取。",
     	none : "优惠劵已经派发完，歇歇您的参与"
 	});
 
@@ -1111,6 +1124,7 @@
             "content" : {
                 "repostSuccess" : "非常感谢您转发我们的微博，现在您可以回复\"优惠\"获得优惠券。",
                 "success" : "您已经成功获得优惠劵，消费时请出示微博昵称即可。",
+                "repeat" : "您已经获得过优惠券，请不要重复获取。",
                 "none" : "优惠劵已经派发完，歇歇您的参与"
             }
         }
