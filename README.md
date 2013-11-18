@@ -154,6 +154,7 @@
 		// 处理返回数据，返回数据中包含fid, vfid, tovfid及几张缩略图的地址。
 	});
 ```
+
 `options`参数如下：
 * `toUid` : 对方的用户id，必选，否则对方看不到
 * `fid` : 文件的id（微盘） 可选 自动下载后再上传
@@ -163,7 +164,34 @@
 
 `fid`, `filePath`, `url`, `qrCode` 选择其一。
 
-### 3.Debug 调试输出:
+### 3.Status 发送微博:
+
+可以通过此接口，发布微博
+
+```
+	pm.Stauts(options, function(data) {
+		// 平台标准返回
+	});
+```
+
+`options`参数如下：
+* `text` : 微博内容，必选
+* `pic` : 图片路径 可选 (**暂时仅支持本地图片，以后会拓展**)
+* `visible` : 可见度 可选 
+
+### 4.Base62 微博ID转换:
+
+对微博的ID进行转换
+
+```
+	pm.Base62.encode(mid);
+	
+	pm.Base62.decode(id);
+```
+
+微博的ID为`mid`，微博的实际路径为`http://weibo.com/用户id/base62的微博id`。
+
+### 5.Debug 调试输出:
 
 * 打开日志输出 `pm.Debug.open()`
 * 日志输出 `pm.Debug.log(......)`
@@ -267,13 +295,54 @@
 ```
 
 -----
+
+## Mention Manager @管理器:
+
+（**需要申请前文所说的Mention权限**）
+
+### 启动
+
+```
+	pm.MentionManager.start();
+```
+
+### 监听某一微博的转发:
+
+```
+	// 微博的id 监听函数
+	pm.MentionManager.addRepostListener(statusId, function(user) {
+		// 返回的user.uid是用户的id
+	});
+```
+
+### 移除对某一微博的转发的监听:
+
+```
+	pm.MentionManager.removeRepostListener(statusId);
+```
+### 监听某一微博中的@自己的评论:
+
+```
+	// 微博的id 监听函数
+	pm.MentionManager.addCommentListener(statusId, function(user) {
+		// 返回的user.uid是用户的id
+	});
+```
+
+### 移除对某一微博中的@自己的评论的监听:
+
+```
+	pm.MentionManager.removeCommentListener(statusId);
+```
+
+-----
     
 ## Reply Manager 回复管理器:
 
 ### 启动:
 
 ```
-	pm.ReplyManager.start()
+	pm.ReplyManager.start();
 ```	
 启动后，基本API Listener会失效。（**基本API Listener不是队列是单个绑定**）
 
@@ -314,7 +383,7 @@
 
 处理过程是真正处理消息和回复消息的业务逻辑，开发者这可以自定义一些业务逻辑。
 
-处理过程是一个对象，里面要包含`onMessage`, `onEvent`, `onMetion`, `onQuitFloor`, `onEnterFloor` 中的一个或几个方法，当有相应事件时，会调用对应方法，接收到消息后，进项处理。
+处理过程是一个对象，里面要包含`onMessage`, `onEvent`, `onQuitFloor`, `onEnterFloor` 中的一个或几个方法，当有相应事件时，会调用对应方法，接收到消息后，进项处理。
 
 每个方法都可以有返回值
 
@@ -325,7 +394,6 @@
 	var Process = {
 		onMessage : function(msg, reply, floor) {}, // 有私信消息
 		onEvent : function(msg, reply) {}, // 有事件消息
-		onMetion : function(msg, reply) {}, // 有@消息
 		onQuitFloor : function(msg, reply, floor) {}, // 退出目录
 		onEnterFloor : function(msg, reply, floor) {} // 进入目录
 	}
@@ -373,7 +441,7 @@
 
 ### 上面的是基本的数据交互接口，开发者可以基于它构建自己的自动回复管理工具。
 
-### 下面将是4类6种已经完成的处理功能，可以配置后直接使用。
+### 下面将是5类7种已经完成的处理功能，可以配置后直接使用。
 
 ------
 
@@ -453,7 +521,7 @@
 
 ------
 
-## Event 活动:
+## Event 活动(纯私信):
 
 ### 1.Lottery 乐透大抽奖
 
@@ -543,6 +611,46 @@
 图示:
 
 ![图例](http://ww2.sinaimg.cn/large/71c50075jw1eao8betq7gj209a08v74i.jpg)
+
+------
+
+## Event 活动(私信与转发结合):
+
+### RepostDiscount 转发获取获取优惠劵:
+
+转发相应微博后，会用私信通知粉丝，然后粉丝回复相应内容，即可获得优惠劵。
+
+组件：`pm.ReplyProcess.RepostDiscount`
+
+```
+	// 创建活动实例
+	var rd = new pm.ReplyProcess.RepostDiscount("转发优惠活动");
+
+	// 设计关键字
+	rd.setKey("优惠");
+
+	// 设置优惠劵数量
+	rd.setNum(100);
+
+	// 设置时间和发送的微博
+	rd.setConf("2013/11/11 00:00:00", "2013/11/11 01:00:00", {
+    	text : "[Test] 关注本账号，并转发此微博，有机会获得本店优惠劵一张。【测试测试测试】"
+	});
+
+	// 设置回复内容
+	rd.setContent({
+    	repostSuccess : "非常感谢您转发我们的微博，现在您可以回复\"优惠\"获得优惠券。",
+    	success : "您已经成功获得优惠劵，消费时请出示微博昵称即可。",
+    	none : "优惠劵已经派发完，歇歇您的参与"
+	});
+
+	// 添加处理过程
+	pm.ReplyManager.addProcess(rd);
+```
+图示:
+
+![图例](http://ww3.sinaimg.cn/large/71c50075jw1eapduxk0quj209c08vdg7.jpg)
+
 
 ------
 
@@ -986,6 +1094,24 @@
                 "afterEvent": "秒杀已经结束！",
                 "success": "恭喜您获得 - NAME ，稍后我们将私信联系您。",
                 "none": "商品已经全部被秒杀！"
+            }
+        },
+        {
+            "type": "RepostDiscount",
+            "name" : "转发微博换优惠劵活动",
+            "startTime": "2013/11/11 00:00:00",
+            "endTime": "2013/11/11 01:00:00",
+            "key": [
+                "优惠"
+            ],
+            "status" : {
+                "text" : "[Test] 关注本账号，并转发此微博，有机会获得本店优惠劵一张。"
+            },
+            "num" : 100,
+            "content" : {
+                "repostSuccess" : "非常感谢您转发我们的微博，现在您可以回复\"优惠\"获得优惠券。",
+                "success" : "您已经成功获得优惠劵，消费时请出示微博昵称即可。",
+                "none" : "优惠劵已经派发完，歇歇您的参与"
             }
         }
     ]

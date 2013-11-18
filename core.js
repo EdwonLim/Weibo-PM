@@ -66,12 +66,22 @@
                                 process.setLogFile(e.log || (basePath + '/' + e.name + '.xlsx'));
                                 Core.ReplyManager.addProcess(process);
                                 break;
+                            case 'RepostDiscount' :
+                                process = new Core.ReplyProcess.RepostDiscount(e.name);
+                                process.setKey(e.key);
+                                process.setNum(e.num);
+                                process.setConf(e.startTime, e.endTime, e.status);
+                                process.setContent(e.content);
+                                process.setLogFile(e.log || (basePath + '/' + e.name + '.xlsx'));
+                                Core.ReplyManager.addProcess(process);
+                                break;
                        }
                     });
                 }
             }
             Core.FileDataBase.init(basePath);
             Core.ReplyManager.start();
+            Core.MentionManager.start();
 
             if (!fs.existsSync(path.resolve('tmp'))) {
                 fs.mkdirSync(path.resolve('tmp'));
@@ -83,17 +93,21 @@
         reply : require('./lib/network/MessageReply'),
         Message : require('./lib/model/Message'),
         ReplyManager : require('./lib/manager/ReplyManager'),
+        MentionManager : require('./lib/manager/MentionManager'),
         ReplyProcess : {
             replyForText : require('./lib/process/ReplyForText'),
             replyForEvent : require('./lib/process/ReplyForEvent'),
             Lottery : require('./lib/process/Lottery'),
             SecKill : require('./lib/process/SecKill'),
+            RepostDiscount : require('./lib/process/RepostDiscount'),
             CustomerService : require('./lib/process/CustomerService'),
             MailBox : require('./lib/process/MailBox')
         },
         OpenAPI : require('./lib/network/OpenAPI'),
+        Status : require('./lib/network/Status'),
         Upload : require('./lib/network/Upload'),
         FileDataBase : require('./lib/util/FileDataBase'),
+        Base62 : require('./lib/util/Base62'),
         Debug : require('./lib/util/Debug')
     };
 

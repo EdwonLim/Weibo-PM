@@ -6,7 +6,6 @@ var pm = require('./../core'),
 pm.Debug.open();
 
 // 初始化
-
 pm.init('username', 'uid', 'password', 'appkey');
 
 // 配置
