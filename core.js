@@ -4,10 +4,10 @@
         path = require('path');
 
     var Core = {
-        init : function(username, uid, password, appkey, config) {
+        init : function(username, uid, password, appkey, filter) {
             require('./lib/UserInfo').init(username, uid, password, appkey);
-            if (config) {
-                require('./lib/network/MessageListener').openFilter(config.startId, config.endId, config.addon);
+            if (filter) {
+                require('./lib/network/MessageListener').addFilter(filter);
             }
         },
         configure : function(options, basePath) {
