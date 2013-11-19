@@ -12,6 +12,8 @@
 ![NPM](https://nodei.co/npm/weibo-pm.png)
 
 * 从0.5.0版本开始，为完整的稳定版本。
+* 0.6版本增加转发监听
+* 0.7版本增加分词以及更详细文档
 
 ------
 
@@ -19,12 +21,12 @@
 
 1. 消息自动回复：回复内容包括文本消息、媒体Card、包含图片的消息、包含地理位置的消息。
 2. 事件自动回复：关注和取消关注时，自动发送私信。
-3. 目录机制：加入目录规则，可根据目录的不同，回复不同的消息。
+3. 目录机制：加入目录规则，可根据目录的不同，回复不同的消息，对未处理的消息进行分词后匹配。
 4. 留言箱：用户可以给不同的对象留言，例如投诉、询问，支持将留言转发至私信，邮件以及URL提交。
 5. 活动事件：通过私信进行活动，如抽奖和秒杀，并将结果制成Excel。
 6. 客服系统：通过私信转发，实现一个账号，多人接入的客服系统，一个大V账号可以接多个客服（微博账号），用户与大V账号的私信会被转发到客服账号。
 
-支持二维码生成、邮件功能、上传功能等。
+支持二维码生成、邮件功能、上传功能、发微博、分词等。
 
 ------
 
@@ -56,6 +58,8 @@
 ```
 	
 ### 2.Receive Message 接收消息:
+
+组件：`pm.listener`
 
 监听所有消息
 
@@ -99,10 +103,12 @@
 
 ### 4.Rely Message 回复消息:
 
+组件：`pm.reply`
+
 需要回复的消息的id，类型和数据，详细参看文档 （**每条消息最多只可被回复 3 次**）
  
 ``` 
-	pm.rely(msgId, type, data, function(rs) {
+	pm.reply(msgId, type, data, function(rs) {
 		// 处理结果
 	});
 ```
@@ -110,6 +116,8 @@
 文档：[http://open.weibo.com/wiki/2/messages/reply](http://open.weibo.com/wiki/2/messages/reply)
 
 ### 5.Send Message 发送消息:
+
+组件：`pm.send`
 
 用户id，类型和数据，详细参看文档 (**只可给粉丝发送消息**)
 
@@ -131,6 +139,8 @@
 
 ### 1.Open API 开放平台接口:
 
+组件：`pm.OpenAPI`
+
 可以通过此接口，调用微博开放平台的接口，详细参看文档 （**暂不支持Post提交文件**）
 
 ```
@@ -146,6 +156,8 @@
 ```
 
 ### 2.Upload API 上传接口:
+
+组件：`pm.Upload`
 
 可以通过此接口，上传文件到微盘
 
@@ -166,6 +178,8 @@
 
 ### 3.Status 发送微博:
 
+组件：`pm.Status`
+
 可以通过此接口，发布微博
 
 ```
@@ -181,6 +195,8 @@
 
 ### 4.Base62 微博ID转换:
 
+组件：`pm.Base62`
+
 对微博的ID进行转换
 
 ```
@@ -193,12 +209,16 @@
 
 ### 5.Debug 调试输出:
 
+组件：`pm.Debug`
+
 * 打开日志输出 `pm.Debug.open()`
 * 日志输出 `pm.Debug.log(......)`
 
 ------ 
 
 ## Message Model 消息实体：
+
+组件：`pm.Message`
 
 在每次回复和发送私信的过程中，都可以创建一个消息实体
 
@@ -298,6 +318,8 @@
 
 ## Mention Manager @管理器:
 
+组件：`pm.MentionManager`
+
 （**需要申请前文所说的Mention权限**）
 
 ### 启动
@@ -345,6 +367,8 @@
     
 ## Reply Manager 回复管理器:
 
+组件：`pm.ReplyManager`
+
 ### 启动:
 
 ```
@@ -360,6 +384,8 @@
 * `helpText` : 目录帮助信息
 * `backText` : 退出目录返回的信息
 * `backKey` : 退出目录的关键词
+* `segment` : 是否对未匹配的内容分词后，再匹配目录名
+* `segmentTip` : 匹配后回复的提示信息
 * `timeout` : 自动退出目录的等待时间，单位是秒 300表示5分钟没有消息，自动退出目录到根目录。
 
 ```
@@ -381,6 +407,8 @@
             "html": "已经退出 html 目录。"
         },
         "backKey": ["0"],
+        "segment" : true,
+        "segmentTip" : "您找的是不是\"KEY\"？可以尝试输入\"KEY\"。",
         "timeout": 300
     });
 ```    
@@ -445,6 +473,62 @@
 
 ```
 	pm.ReplyManager.reset();
+```
+
+------
+
+## 两个简单的处理过程的Demo
+
+### 根据用户微博账户信息情况，回复不同的内容
+
+根据用户的地域和性别回复相应内容。
+
+```
+    var process = {
+        onMessage : function(msg, reply) {
+            // 判断消息是不是符合要求
+            if (msg.type == "text" && msg.text == "我是") {
+                // 查询用户信息
+                pm.OpenAPI.get("users/show", "uid=" + msg.fromUid, function(data) {
+                    // 回复消息
+                    reply.setText(data.location + " " + (data.gender == "m" ? "纯爷们" : "女汉子")).send();
+                });
+            }
+        }
+    }
+```
+
+### 查询外部接口，回复天气信息
+
+```
+    // 城市和代码对应关系
+    var cities = {"北京" : "101010100"};
+    var process = {
+        onMessage : function(msg, reply) {
+            // 判断消息是否符合标注
+            if (msg.type == "text" && msg.text.indexOf("天气") > -1) {
+                // 获取地理位置
+                var addr = msg.text.replace(/天气/, "");
+                if (cities[addr]) {
+                    // 请求天气接口
+                    http.request({
+                        hostname : "m.weather.com.cn",
+                        path : ("/data/" + cities[addr] + ".html")
+                    }, function(res){
+                        var rs = "";
+                        res.on("data", function(chunk) {
+                            rs += chunk + '';
+                        });
+                        res.on("end", function() {
+                            rs = JSON.parse(rs).weatherinfo;
+                            // 回复消息
+                            reply.setText(rs.city + "\n" + rs.date_y + " " + rs.week + "\n天气：" + rs.weather1 + " " + rs.wind1 + "\n温度：" + rs.temp1 + "\n" + rs.index_d).send();
+                        });
+                    }).end();
+                }
+            }
+        }
+    };
 ```
 
 ------
@@ -919,6 +1003,8 @@
         "backKey": [
             "0"
         ],
+        "segment" : true,
+        "segmentTip" : "您找的是不是\"KEY\"？可以尝试输入\"KEY\"。",
         "timeout": 300
     },
     "forText": {
