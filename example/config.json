@@ -22,6 +22,8 @@
         "backKey": [
             "0"
         ],
+        "segment" : true,
+        "segmentTip" : "您找的是不是\"KEY\"？可以尝试输入\"KEY\"。",
         "timeout": 300
     },
     "forText": {
@@ -215,8 +217,8 @@
         {
             "type": "RepostDiscount",
             "name" : "转发微博换优惠劵活动",
-            "startTime": "2013/11/18 19:26:00",
-            "endTime": "2013/11/18 19:27:00",
+            "startTime": "2013/11/11 00:00:00",
+            "endTime": "2013/11/11 01:00:00",
             "key": [
                 "优惠"
             ],
