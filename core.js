@@ -92,13 +92,20 @@
                 fs.mkdirSync(path.resolve('tmp'));
             }
         },
-        User : require('./lib/UserInfo'),
         listener : require('./lib/network/MessageListener'),
         send : require('./lib/network/MessageSend'),
         reply : require('./lib/network/MessageReply'),
+        reset : function() {
+            Core.ReplyManager.reset();
+            Core.MentionManager.reset();
+        },
+
+        User : require('./lib/UserInfo'),
         Message : require('./lib/model/Message'),
         ReplyManager : require('./lib/manager/ReplyManager'),
         MentionManager : require('./lib/manager/MentionManager'),
+        WeixinProxy : require('./lib/manager/WeixinProxy'),
+
         ReplyProcess : {
             replyForText : require('./lib/process/ReplyForText'),
             replyForEvent : require('./lib/process/ReplyForEvent'),
@@ -108,16 +115,16 @@
             CustomerService : require('./lib/process/CustomerService'),
             MailBox : require('./lib/process/MailBox')
         },
-        OpenAPI : require('./lib/network/OpenAPI'),
-        Status : require('./lib/network/Status'),
-        Upload : require('./lib/network/Upload'),
-        FileDataBase : require('./lib/util/FileDataBase'),
-        Base62 : require('./lib/util/Base62'),
-        Debug : require('./lib/util/Debug'),
-        Reset : function() {
-            Core.ReplyManager.reset();
-            Core.MentionManager.reset();
+
+        Util : {
+            OpenAPI : require('./lib/network/OpenAPI'),
+            Status : require('./lib/network/Status'),
+            Upload : require('./lib/network/Upload'),
+            FileDataBase : require('./lib/util/FileDataBase'),
+            Base62 : require('./lib/util/Base62'),
+            Debug : require('./lib/util/Debug')
         }
+
     };
 
     module.exports = Core;

@@ -14,6 +14,7 @@
 * 从0.5.0版本开始，为完整的稳定版本。
 * 0.6版本增加转发监听
 * 0.7版本增加分词以及更详细文档
+  * 0.7.2 整合Util
 
 ------
 
@@ -139,30 +140,30 @@
 
 ### 1.Open API 开放平台接口:
 
-组件：`pm.OpenAPI`
+组件：`pm.Util.OpenAPI`
 
 可以通过此接口，调用微博开放平台的接口，详细参看文档 （**暂不支持Post提交文件**）
 
 ```
 	// GET 请求
-	pm.OpenAPI.get("users/show", "uid=1908736117", function(data) {
+	pm.Util.OpenAPI.get("users/show", "uid=1908736117", function(data) {
 		// 处返回理数据
 	});
 	
 	// POST 请求
-	pm.OpenAPI.post("statuses/update", "status=" + encodeURIComponent("这是一条测试微博"), function(data) {
+	pm.Util.OpenAPI.post("statuses/update", "status=" + encodeURIComponent("这是一条测试微博"), function(data) {
 		// 处返回理数据
 	});
 ```
 
 ### 2.Upload API 上传接口:
 
-组件：`pm.Upload`
+组件：`pm.Util.Upload`
 
 可以通过此接口，上传文件到微盘
 
 ```
-	pm.Upload(options, function(data) {
+	pm.Util.Upload(options, function(data) {
 		// 处理返回数据，返回数据中包含fid, vfid, tovfid及几张缩略图的地址。
 	});
 ```
@@ -178,12 +179,12 @@
 
 ### 3.Status 发送微博:
 
-组件：`pm.Status`
+组件：`pm.Util.Status`
 
 可以通过此接口，发布微博
 
 ```
-	pm.Stauts(options, function(data) {
+	pm.Util.Stauts(options, function(data) {
 		// 平台标准返回
 	});
 ```
@@ -195,24 +196,24 @@
 
 ### 4.Base62 微博ID转换:
 
-组件：`pm.Base62`
+组件：`pm.Util.Base62`
 
 对微博的ID进行转换
 
 ```
-	pm.Base62.encode(mid);
+	pm.Util.Base62.encode(mid);
 	
-	pm.Base62.decode(id);
+	pm.Util.Base62.decode(id);
 ```
 
 微博的ID为`mid`，微博的实际路径为`http://weibo.com/用户id/base62的微博id`。
 
 ### 5.Debug 调试输出:
 
-组件：`pm.Debug`
+组件：`pm.Util.Debug`
 
-* 打开日志输出 `pm.Debug.open()`
-* 日志输出 `pm.Debug.log(......)`
+* 打开日志输出 `pm.Util.Debug.open()`
+* 日志输出 `pm.Util.Debug.log(......)`
 
 ------ 
 
