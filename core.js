@@ -87,10 +87,6 @@
             Core.Util.FileDataBase.init(basePath);
             Core.ReplyManager.start();
             Core.MentionManager.start();
-
-            if (!fs.existsSync(path.resolve('tmp'))) {
-                fs.mkdirSync(path.resolve('tmp'));
-            }
         },
         listener : require('./lib/network/MessageListener'),
         send : require('./lib/network/MessageSend'),

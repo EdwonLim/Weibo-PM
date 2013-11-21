@@ -15,6 +15,8 @@
 * 0.6版本增加转发监听
 * 0.7版本增加分词以及更详细文档
   * 0.7.2 整合Util
+* 0.8版本增加了整合微信公共账号后台的功能（**无缝从微信迁移到微博**）
+  * 0.8.1 支持把模拟接口放到BAE上(修复文件的本地缓存导致的错误)
 
 ------
 
@@ -531,6 +533,70 @@
         }
     };
 ```
+
+------
+
+## 支持微信公共账号（订阅号/服务号）无缝迁移
+
+* 模拟微信服务器，向公共账号开发者后台请求数据，格式与微信完全相同，省去开发者代码改造的麻烦。
+
+* 模拟实现上传下载，用户查询等微信接口，数据格式和微信相同，开发者只需更改API的url的host即可。
+
+### 支持微信自动回复机制
+
+在不用修改任何代码逻辑的情况下，将自动回复功能从微信迁移到微博公共账号上
+
+组件：`pm.WeChat.Process`
+
+```
+    pm.ReplyManager.addProcess(
+        new pm.WeChat.Process(
+            'http://sipc.sinaapp.com/index.php',
+            'sipc******',
+            'http://weibopm.duapp.com',
+            'wechat'
+        )
+    );
+```
+
+* 前两个参数是`URL`和`Token`，和微信后台配置是相同的，如下面的图示。
+* 第三个参数是模拟API的Host（下节将说明）。
+* 第四个参数示`floor`，表示此目录下的消息会推送给`URL`，没有此参数，则全部消息都会推送到`URL`上。
+
+图示：![配图](http://ww2.sinaimg.cn/large/71c50075jw1easrtw3t6qj20c0064glu.jpg)
+
+注意：
+
+* 现在仅支持文字、图片、地理位置的推送。
+* 现在仅支持文字、图片、图文消息的回复。
+* 常用的一般是文字和图文，而且不分目录，因此后两个参数基本上可以忽略。
+* 怎么区分消息是从微信还是微博来？我觉得你的微信ID和微博的ID是不同的，判断`ToUserName`即可。
+
+### 支持模拟微信API
+
+微信公共平台给开发者提供了一些API，`url`前缀为: `https://api.weixin.qq.com`，在这里为了让开发者更容易迁移，提供一个模拟微信API的模块。
+
+组件：`pm.WeChat.Server`
+
+```
+	// appid, secret 和 端口
+	pm.WeChat.Server('abc', '123', 8080);
+
+```
+
+这样开发者只需把`url`改成此服务的部署的地址即可，例如:
+`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=abc&secret=123`改为`你的服务地址/cgi-bin/token?grant_type=client_credential&appid=abc&secret=123`
+即可，返回结果和微信的接口完全相同。
+
+现在支持的常用接口有:
+
+* `/cgi-bin/token`
+* `/cgi-bin/media/upload`
+* `/cgi-bin/media/get`
+* `/cgi-bin/message/custom/send`
+* `/cgi-bin/user/info`
+
+### 接口形式和文档上完全一样，基本上可以直接迁移
 
 ------
 
