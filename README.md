@@ -551,10 +551,10 @@
 ```
     pm.ReplyManager.addProcess(
         new pm.WeChat.Process(
-            'http://sipc.sinaapp.com/index.php',
-            'sipc******',
-            'http://weibopm.duapp.com',
-            'wechat'
+            "http://sipc.sinaapp.com/index.php",
+            "sipc******",
+            "http://weibopm.duapp.com",
+            "wechat"
         )
     );
 ```
@@ -580,7 +580,7 @@
 
 ```
 	// appid, secret 和 端口
-	pm.WeChat.Server('abc', '123', 8080);
+	pm.WeChat.Server("abc", "123", 8080);
 
 ```
 
