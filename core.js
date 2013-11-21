@@ -84,7 +84,7 @@
                     });
                 }
             }
-            Core.FileDataBase.init(basePath);
+            Core.Util.FileDataBase.init(basePath);
             Core.ReplyManager.start();
             Core.MentionManager.start();
 
@@ -104,8 +104,11 @@
         Message : require('./lib/model/Message'),
         ReplyManager : require('./lib/manager/ReplyManager'),
         MentionManager : require('./lib/manager/MentionManager'),
-        WeixinProxy : require('./lib/manager/WeixinProxy'),
 
+        WeChat : {
+            Process : require('./lib/wechat/Process'),
+            Server : require('./lib/wechat/Server')
+        },
         ReplyProcess : {
             replyForText : require('./lib/process/ReplyForText'),
             replyForEvent : require('./lib/process/ReplyForEvent'),

@@ -1,6 +1,6 @@
 {
   "name": "weibo-pm",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "Private message manager tool of Sina Weibo fan service.",
   "main": "core.js",
   "repository": {
